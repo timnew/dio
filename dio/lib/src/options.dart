@@ -656,7 +656,7 @@ class _RequestConfig {
     this.maxRedirects = maxRedirects ?? 5;
     this.persistentConnection = persistentConnection ?? true;
     this.receiveDataWhenStatusError = receiveDataWhenStatusError ?? true;
-    this.enableForceConvert = enableForceConvert ?? false;
+    this.enableForceConvert = enableForceConvert ?? true;
     this.validateStatus = validateStatus ??
         (int? status) {
           return status != null && status >= 200 && status < 300;

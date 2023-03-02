@@ -410,6 +410,22 @@ void main() {
     expect(textResponse2.data, json.encode(expectedResponseData));
   });
 
+  test('not forceConvert responseType when disabled', () async {
+    final dio = Dio(BaseOptions(
+        baseUrl: MockAdapter.mockBase, enableForceConvert: false)) //
+      ..httpClientAdapter = MockAdapter();
+    final expectedResponseData = <String, dynamic>{"code": 0, "result": "ok"};
+
+    final response = await dio.get<Map<String, dynamic>>('/test-force-convert');
+    expect(response.data, isNull);
+
+    final textResponse = await dio.get<dynamic>('/test-force-convert');
+    expect(textResponse.data, json.encode(expectedResponseData));
+
+    final textResponse2 = await dio.get<String>('/test-force-convert');
+    expect(textResponse2.data, json.encode(expectedResponseData));
+  });
+
   test('option invalid base url', () {
     final opt1 = 'blob:http://localhost/xyz123';
     final opt2 = 'https://pub.dev';
