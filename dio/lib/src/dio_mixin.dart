@@ -556,9 +556,10 @@ abstract class DioMixin implements Dio {
       );
       final statusOk = reqOpt.validateStatus(responseBody.statusCode);
       if (statusOk || reqOpt.receiveDataWhenStatusError == true) {
-        final forceConvert = !(T == dynamic || T == String) &&
+        final canForceConvert = !(T == dynamic || T == String) &&
             !(reqOpt.responseType == ResponseType.bytes ||
                 reqOpt.responseType == ResponseType.stream);
+        final forceConvert = canForceConvert && reqOpt.enableForceConvert;
         String? contentType;
         if (forceConvert) {
           contentType = headers.value(Headers.contentTypeHeader);

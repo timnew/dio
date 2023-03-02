@@ -93,6 +93,7 @@ class BaseOptions extends _RequestConfig with OptionsMixin {
     String? contentType,
     ValidateStatus? validateStatus,
     bool? receiveDataWhenStatusError,
+    bool? enableForceConvert,
     bool? followRedirects,
     int? maxRedirects,
     bool? persistentConnection,
@@ -111,6 +112,7 @@ class BaseOptions extends _RequestConfig with OptionsMixin {
           contentType: contentType,
           validateStatus: validateStatus,
           receiveDataWhenStatusError: receiveDataWhenStatusError,
+          enableForceConvert: enableForceConvert,
           followRedirects: followRedirects,
           maxRedirects: maxRedirects,
           persistentConnection: persistentConnection,
@@ -138,6 +140,7 @@ class BaseOptions extends _RequestConfig with OptionsMixin {
     String? contentType,
     ValidateStatus? validateStatus,
     bool? receiveDataWhenStatusError,
+    bool? enableForceConvert,
     bool? followRedirects,
     int? maxRedirects,
     bool? persistentConnection,
@@ -159,6 +162,7 @@ class BaseOptions extends _RequestConfig with OptionsMixin {
       validateStatus: validateStatus ?? this.validateStatus,
       receiveDataWhenStatusError:
           receiveDataWhenStatusError ?? this.receiveDataWhenStatusError,
+      enableForceConvert: enableForceConvert ?? this.enableForceConvert,
       followRedirects: followRedirects ?? this.followRedirects,
       maxRedirects: maxRedirects ?? this.maxRedirects,
       persistentConnection: persistentConnection ?? this.persistentConnection,
@@ -208,6 +212,7 @@ class Options {
     this.contentType,
     this.validateStatus,
     this.receiveDataWhenStatusError,
+    this.enableForceConvert,
     this.followRedirects,
     this.maxRedirects,
     this.persistentConnection,
@@ -230,6 +235,7 @@ class Options {
     String? contentType,
     ValidateStatus? validateStatus,
     bool? receiveDataWhenStatusError,
+    bool? enableForceConvert,
     bool? followRedirects,
     int? maxRedirects,
     bool? persistentConnection,
@@ -267,6 +273,7 @@ class Options {
       validateStatus: validateStatus ?? this.validateStatus,
       receiveDataWhenStatusError:
           receiveDataWhenStatusError ?? this.receiveDataWhenStatusError,
+      enableForceConvert: enableForceConvert ?? this.enableForceConvert,
       followRedirects: followRedirects ?? this.followRedirects,
       maxRedirects: maxRedirects ?? this.maxRedirects,
       persistentConnection: persistentConnection ?? this.persistentConnection,
@@ -317,6 +324,7 @@ class Options {
       validateStatus: validateStatus ?? baseOpt.validateStatus,
       receiveDataWhenStatusError:
           receiveDataWhenStatusError ?? baseOpt.receiveDataWhenStatusError,
+      enableForceConvert: enableForceConvert ?? baseOpt.enableForceConvert,
       followRedirects: followRedirects ?? baseOpt.followRedirects,
       maxRedirects: maxRedirects ?? baseOpt.maxRedirects,
       persistentConnection:
@@ -406,6 +414,10 @@ class Options {
   /// The default value is true
   bool? receiveDataWhenStatusError;
 
+  /// Whether to enable force convert response to json if content-type is not byte stream or string
+  /// The default value is false
+  bool? enableForceConvert;
+
   /// Custom field that you can retrieve it later in
   /// [Interceptor], [Transformer] and the [Response] object.
   Map<String, dynamic>? extra;
@@ -459,6 +471,7 @@ class RequestOptions extends _RequestConfig with OptionsMixin {
     String? contentType,
     ValidateStatus? validateStatus,
     bool? receiveDataWhenStatusError,
+    bool? enableForceConvert,
     bool? followRedirects,
     int? maxRedirects,
     bool? persistentConnection,
@@ -477,6 +490,7 @@ class RequestOptions extends _RequestConfig with OptionsMixin {
           contentType: contentType,
           validateStatus: validateStatus,
           receiveDataWhenStatusError: receiveDataWhenStatusError,
+          enableForceConvert: enableForceConvert,
           followRedirects: followRedirects,
           maxRedirects: maxRedirects,
           persistentConnection: persistentConnection,
@@ -508,6 +522,7 @@ class RequestOptions extends _RequestConfig with OptionsMixin {
     String? contentType,
     ValidateStatus? validateStatus,
     bool? receiveDataWhenStatusError,
+    bool? enableForceConvert,
     bool? followRedirects,
     int? maxRedirects,
     bool? persistentConnection,
@@ -544,6 +559,7 @@ class RequestOptions extends _RequestConfig with OptionsMixin {
       validateStatus: validateStatus ?? this.validateStatus,
       receiveDataWhenStatusError:
           receiveDataWhenStatusError ?? this.receiveDataWhenStatusError,
+      enableForceConvert: enableForceConvert ?? this.enableForceConvert,
       followRedirects: followRedirects ?? this.followRedirects,
       maxRedirects: maxRedirects ?? this.maxRedirects,
       persistentConnection: persistentConnection ?? this.persistentConnection,
@@ -614,6 +630,7 @@ class _RequestConfig {
     int? maxRedirects,
     bool? persistentConnection,
     bool? receiveDataWhenStatusError,
+    bool? enableForceConvert,
     ValidateStatus? validateStatus,
     ResponseType? responseType,
     this.requestEncoder,
@@ -639,6 +656,7 @@ class _RequestConfig {
     this.maxRedirects = maxRedirects ?? 5;
     this.persistentConnection = persistentConnection ?? true;
     this.receiveDataWhenStatusError = receiveDataWhenStatusError ?? true;
+    this.enableForceConvert = enableForceConvert ?? false;
     this.validateStatus = validateStatus ??
         (int? status) {
           return status != null && status >= 200 && status < 300;
@@ -695,7 +713,7 @@ class _RequestConfig {
 
   set receiveTimeout(Duration? value) {
     if (value != null && value.isNegative) {
-      throw StateError("reveiveTimeout should be positive");
+      throw StateError("receiveTimeout should be positive");
     }
     _receiveTimeout = value;
   }
@@ -744,6 +762,10 @@ class _RequestConfig {
   /// Whether receiving response data when http status code is not successful.
   /// The default value is true
   late bool receiveDataWhenStatusError;
+
+  /// Whether force convert response data to json if it is not byte stream or string.
+  /// The default value is false
+  late bool enableForceConvert;
 
   /// Custom field that you can retrieve it later in [Interceptor]、[Transformer] and the [Response] object.
   late Map<String, dynamic> extra;
